@@ -60,4 +60,15 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $result = ob_get_clean();
         $this->assertEquals('TEST', $result);
     }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testErrorController()
+    {
+        $_SERVER['REQUEST_URI'] = '/index/error';
+        $this->_app->run(__DIR__ . '/config.ini');
+    }
+
+
 }

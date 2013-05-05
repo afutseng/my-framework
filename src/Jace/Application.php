@@ -54,6 +54,9 @@ class Application
             $controller->setResponse($this->_response);
 
             Event::trigger('beforeDispatch');
+            if (! method_exists($controller, $methodName)) {
+                throw new \Exception('No such method!');
+            }
             $this->_response->appendBody($controller->$methodName());
             Event::trigger('afterDispatch');
 
