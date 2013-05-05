@@ -11,21 +11,37 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->_app = new Application();
     }
 
-    public function testIndexController()
+    /**
+     * @dataProvider provider
+     */
+    public function testIndexController(
+        $request_uri,
+        $exp_controller,
+        $exp_action,
+        $exp_response
+        )
     {
         $_SERVER = [
-            "REQUEST_URI" => "/",
+            "REQUEST_URI" => $request_uri,
         ];
 
         ob_start();
         $this->_app->run(__DIR__ . '/config.ini');
         $controllerName = $this->_app->getControllerName();
         $actionName = $this->_app->getActionName();
-        $this->assertEquals('index', $controllerName);
-        $this->assertEquals('index', $actionName);
+        $this->assertEquals($exp_controller, $controllerName);
+        $this->assertEquals($exp_action, $actionName);
 
         $result = ob_get_clean();
-        $this->assertEquals('INDEX', $result);
+        $this->assertEquals($exp_response, $result);
+    }
+
+    public function provider()
+    {
+        return [
+            ['/', 'index', 'index', 'INDEX'],
+            ['/test/abc', 'test', 'abc', 'TEST']
+        ];
     }
 
     public function testTestController()
